@@ -6,6 +6,7 @@ lazy val commonSettings: Seq[Def.Setting[_]] = Seq(
   libraryDependencies ++= Seq(
     "io.frees" %% "frees-core" % freesV,
     "io.frees" %% "frees-rpc" % "0.4.1",
+    "io.frees"  %% "frees-async-cats-effect" % freesV,
     "org.scalameta" %% "scalameta" % "1.8.0"),
   scalacOptions += "-Xplugin-require:macroparadise",
   scalacOptions in(Compile, console) ~= (_ filterNot (_ contains "paradise")) // macroparadise plugin doesn't work in repl yet.
@@ -51,3 +52,11 @@ lazy val app = project
   .settings(commonSettings)
   .aggregate(`data-generator`, services)
   .dependsOn(`data-generator`, services)
+
+// RPC Server.
+lazy val server = project
+  .in(file("server"))
+  .settings(moduleName := "rpc-server")
+  .settings(commonSettings)
+  .aggregate(services)
+  .dependsOn(services)
